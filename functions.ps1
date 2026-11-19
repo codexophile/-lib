@@ -50,7 +50,7 @@ $pro_ffprobe = & 'C:\mega\IDEs\powershell\ffmpeg\ffmpeg-find.ps1' -Executable 'f
   Add-Alias 'ffprobe' $pro_ffprobe
   Add-Alias 'sqlite3' 'C:\mega\program-files\sqlite-tools\sqlite3.exe'
   Add-Alias 'es' 'C:\mega\program-files\Everything\es.exe'
-  Add-Alias 'mpv' 'C:\Program Files\MPV Player\mpv.com'
+  Add-Alias 'mpv' 'C:\Program Files\MPV Player\mpv.com' -Force
   Add-Alias 'mpv-exe' 'C:\Program Files\MPV Player\mpv.exe'
 ) | Format-Table -AutoSize
 
