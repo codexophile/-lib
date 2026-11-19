@@ -1,22 +1,60 @@
 # oh-my-posh init pwsh | Invoke-Expression
 Invoke-Expression (&starship init powershell)
 
-$pro_ffmpeg = & 'C:\mega\IDEs\powershell\ffmpeg\ffmpeg-find.ps1'
-$pro_ffprobe = & 'C:\mega\IDEs\powershell\ffmpeg\ffmpeg-find.ps1' -Executable 'ffprobe'
-$pro_ffprobe_wrapper = 'C:\mega\IDEs\powershell\ffmpeg\ffprobe.ps1'
-$pro_sqlite3 = 'C:\mega\program-files\sqlite-tools\sqlite3.exe'
-$pro_es = 'C:\mega\program-files\Everything\es.exe'
-$pro_mpv = 'C:\Program Files\MPV Player\mpv.exe'
-Get-Variable -Name pro_*
+function Add-Alias {
+  [CmdletBinding()]
+  [OutputType([PSCustomObject])]
+  param(
+    [Parameter(Mandatory, Position = 0)]
+    [ValidateNotNullOrEmpty()]
+    [string]$AliasName,
 
-function Add-Alias(
-  [string]$AliasName,
-  [string]$Command
-) {
-  if (-not (Get-Command $AliasName -ErrorAction SilentlyContinue)) {
-    Set-Alias -Name $AliasName -Value $Command
+    [Parameter(Mandatory, Position = 1)]
+    [ValidateNotNullOrEmpty()]
+    [string]$Command,
+
+    [switch]$Force
+  )
+
+  $varName = "pro_$AliasName"
+
+  # 1. Create the variable holding the command/path.
+  Set-Variable -Name $varName -Value $Command -Scope Global -Force
+
+  # 2. Create the alias from the variable's value (aliases can't point at variables).
+  $target = Get-Variable -Name $varName -Scope Global -ValueOnly
+  $aliasCreated = $false
+
+  if ($Force -or -not (Get-Command $AliasName -ErrorAction SilentlyContinue)) {
+    Set-Alias -Name $AliasName -Value $target -Scope Global -Force
+    $aliasCreated = $true
+  }
+  else {
+    Write-Warning "A command named '$AliasName' already exists; alias skipped. Use -Force to overwrite."
+  }
+
+  # 3. Report what was created.
+  [PSCustomObject]@{
+    Variable     = "`$$varName"
+    Alias        = $AliasName
+    Target       = $target
+    AliasCreated = $aliasCreated
   }
 }
+
+$pro_ffmpeg = & 'C:\mega\IDEs\powershell\ffmpeg\ffmpeg-find.ps1'
+$pro_ffprobe = & 'C:\mega\IDEs\powershell\ffmpeg\ffmpeg-find.ps1' -Executable 'ffprobe'
+
+@(
+  Add-Alias 'ffmpeg' $pro_ffmpeg
+  Add-Alias 'ffprobe' $pro_ffprobe
+  Add-Alias 'sqlite3' 'C:\mega\program-files\sqlite-tools\sqlite3.exe'
+  Add-Alias 'es' 'C:\mega\program-files\Everything\es.exe'
+  Add-Alias 'mpv' 'C:\Program Files\MPV Player\mpv.com'
+  Add-Alias 'mpv-exe' 'C:\Program Files\MPV Player\mpv.exe'
+) | Format-Table -AutoSize
+
+
 
 # Add-Type -AssemblyName PresentationCore, PresentationFramework
 # Add-Type -AssemblyName System.Windows.Forms
