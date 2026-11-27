@@ -46,8 +46,8 @@ $pro_ffmpeg = & 'C:\mega\IDEs\powershell\ffmpeg\ffmpeg-find.ps1'
 $pro_ffprobe = & 'C:\mega\IDEs\powershell\ffmpeg\ffmpeg-find.ps1' -Executable 'ffprobe'
 
 @(
-  Add-Alias 'ffmpeg' $pro_ffmpeg
-  Add-Alias 'ffprobe' $pro_ffprobe
+  Add-Alias 'ffmpeg_' $pro_ffmpeg
+  Add-Alias 'ffprobe_' $pro_ffprobe
   Add-Alias 'sqlite3' 'C:\mega\program-files\sqlite-tools\sqlite3.exe'
   Add-Alias 'es' 'C:\mega\program-files\Everything\es.exe'
   Add-Alias 'mpv' 'C:\Program Files\MPV Player\mpv.com' -Force
